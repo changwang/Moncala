@@ -32,12 +32,15 @@ class Pit(object):
         self.stones += stones
     
     def isMyMancala(self, player):
+        """ checks if this is player's mancala """
         return (self.player == player) and self.isMancala
     
     def isOppMancala(self, player):
+        """ checks if this is opponent's mancala """
         return (self.player != player) and self.isMancala
     
     def isPlayersPit(self, player):
+        """ checks if this is one of the player's pit """
         return (self.player == player) and (not self.isMancala)
 
 class MancalaBoard(object):
@@ -53,9 +56,10 @@ class MancalaBoard(object):
         self.topMancala = None
         self.bottomMancala = None
         
-        self.resetBoard()
+        self.setupBoard()
         
-    def resetBoard(self):
+    def setupBoard(self):
+        """ initialize the board """
         self.bottomMancala = Pit(0, True, 0)
         self.topMancala = Pit(1, True, 0)
         for i in range(self.rowSize):
@@ -68,6 +72,7 @@ class MancalaBoard(object):
         self.mancala[0] = self.bottomMancala
         self.mancala[1] = self.topMancala
         
+        # wire up the pits
         self.top[0].clockwise = self.bottomMancala
         self.bottomMancala.counterclock = self.top[0]
         self.bottom[0].clockwise = self.topMancala
@@ -92,24 +97,23 @@ class MancalaBoard(object):
                 self.bottom[i].clockwise = self.bottom[i-1]
     
     def mySide(self, player):
-        side = []
-        for i in range(self.rowSize):
-            side.append(self.board[player][i].stones)
-        return side
+        """ returns a list of pits count on player's side """
+        return [pit.stones for pit in self.board[player]]
     
     def oppSide(self, player):
-        side = []
-        for i in range(self.rowSize):
-            side.append(self.board[(player+1)%2][i].stones)
-        return side
-    
+        """ returns a list of pits count on opponent's side """
+        return [pit.stones for pit in self.board[(player+1)%2]]
+        
     def stonesInMyMancala(self, player):
+        """ return the number of stones in player's mancala """
         return self.mancala[player].stones
     
     def stonesInOppMancala(self, player):
+        """ return the number of stones in opponent's mancala """
         return self.mancala[(player+1)%2].stones
         
     def playPit(self, player, pitnum):
+        """ plays the pits, return true if the player gets another turn """
         pit = self.board[player][pitnum]
         if pit.stones == 0:
             return True
@@ -128,12 +132,12 @@ class MancalaBoard(object):
             return False
         
     def inPlay(self, player):
-        num = 0
-        for i in range(self.rowSize):
-            num += self.board[player][i].stones
-        return num
+        """ returns the number of stones on the player's side
+        (excluding those in the mancala) """
+        return sum([pit.stones for pit in self.board[player]])
     
     def isGameOver(self):
+        """ checks if at least one side is clear """
         plays = [self.inPlay(0), self.inPlay(1)]
         if plays[0] == 0 or plays[1] == 0:
             self.bottomMancala.dropAll(plays[0])
@@ -145,6 +149,7 @@ class MancalaBoard(object):
         return False
     
     def winner(self):
+        """ returns the player id with the most stones in the mancala """
         if self.stonesInMyMancala(0) > self.stonesInMyMancala(1):
             return 0
         elif self.stonesInMyMancala(0) < self.stonesInMyMancala(1):
@@ -153,6 +158,7 @@ class MancalaBoard(object):
             return -1
         
     def printBoard(self):
+        """ print the current board """
         print "    index   ||      ||(6)||(5)||(4)||(3)||(2)||(1)||      ||"
         print "            ||============================================||"
         print "            ||      || " + str(self.top[5].stones) + " || " + str(self.top[4].stones) + " || " + str(self.top[3].stones) + " || " + str(self.top[2].stones) + " || " + str(self.top[1].stones) + " || " + str(self.top[0].stones) + " || " + "     ||"
