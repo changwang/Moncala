@@ -167,6 +167,7 @@ class MancalaBoard(object):
         print "            ||============================================||"
         print "    index   ||      ||(1)||(2)||(3)||(4)||(5)||(6)||      ||"
         
+        
 if __name__ == '__main__':
     board = MancalaBoard()
     
@@ -177,7 +178,11 @@ if __name__ == '__main__':
             board.printBoard()
             if board.isGameOver():
                 break
-            move = int(raw_input("Player one's turn, move is: "))
+            print
+            move = int(raw_input("It's your turn, move is: "))
+            print
+            print "---------------------------- seperator ----------------------------"
+            print
             if move > 6 or move < 1:
                 continue
             getsTurn = board.playPit(0, move - 1)
@@ -189,7 +194,11 @@ if __name__ == '__main__':
             board.printBoard()
             if board.isGameOver():
                 break
-            move = int(raw_input("Player two's turn, move is: "))
+            print
+            move = int(raw_input("It's neural network's turn, move is: "))
+            print
+            print "---------------------------- seperator ----------------------------"
+            print
             if move > 6 or move < 1:
                 continue
             getsTurn = board.playPit(1, move - 1)
@@ -197,8 +206,8 @@ if __name__ == '__main__':
             break
 
     if board.winner() == 0:
-        print "Player one won"
+        print "You beat the neural network, WOW!"
     elif board.winner() == 1:
-        print "Player two won"
+        print "The neural network beats you! :("
     else:
         print "It is a tie"

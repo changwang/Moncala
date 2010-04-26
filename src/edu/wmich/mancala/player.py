@@ -104,14 +104,16 @@ class NNPlayer(Player):
         state = self._getState(board)
         qVals = self._getQvals(board)
         myside = board.mySide(self.id)
-        validMoves = [i for i in myside if i > 0]
+        validMoves = [index for index, val in enumerate(myside) if val > 0]
         
         # if there is no action available, just choose 0
         if len(validMoves) == 0: return -1
         # condense to only non-empty pits
         validQVals = []
-        for index, val in enumerate(validMoves):
-            validQVals[index] = qVals[val]
+        #for index, val in enumerate(validMoves):
+#            validQVals[index] = qVals[val]
+        for val in validMoves:
+            validQVals.append(qVals[val - 1])
             
         # choose action based on strategy
         if self.strategy == NNPlayer.LEGAL_STRATEGY[0]: # greedy
@@ -193,7 +195,7 @@ class NNPlayer(Player):
     def _getBestIndex(self, validQvals):
         """ chooses current expected best move """
         maxVal = max(validQvals) # FIXME
-        bestMoves = [move for move in validQvals if move == maxVal]
+        bestMoves = [index for index, move in enumerate(validQvals) if move == maxVal]
 
         # heuristic: choose last bucket
         return int(bestMoves[-1])
@@ -203,11 +205,12 @@ class NNPlayer(Player):
         state = self._getState(board)
         # create the input to neural network
         toNN = [state[i-1] for i in range(1, self.inputSize)]
+        toNN.insert(0, 0.0)
         # find expected rewards
         qVals = []
         for i in range(self.rowSize):
             toNN[0] = float(i)
-            qVals[i] = self.Q.calculate(toNN)
+            qVals.append(self.Q.calculate(toNN))
         return qVals
         
     def _getState(self, board):
@@ -399,6 +402,7 @@ class HumanPlayer(Player):
                 move = -1
                 
             if board.mySide(self.id)[move-1] == 0:
+                print "The pit you selected is empty, please choose another one! :)"
                 move = -1
         return move
     
@@ -409,7 +413,3 @@ class HumanPlayer(Player):
             print "Lost"
         else:
             print "Tie"
-
-if __name__ == '__main__':
-    nnplayer = NNPlayer(1)
-    print nnplayer.id

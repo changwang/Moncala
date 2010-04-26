@@ -5,7 +5,7 @@ Created on Apr 23, 2010
 @author: changwang
 '''
 
-from player import *
+from player import RandomPlayer, SimplePlayer, NNPlayer, HumanPlayer
 
 class PlayerAgent(object):
     def __init__(self, type, id):
@@ -16,13 +16,10 @@ class PlayerAgent(object):
             self.player = SimplePlayer(id)
         elif type.startswith("nn"):
             self.player = NNPlayer(id, 6, 4)
-            
+        elif type.startswith("human"):
+            self.player = HumanPlayer(id)
+        else:
+            self.player = RandomPlayer(id)
             
     def createPlayer(self):
         return self.player
-    
-if __name__ == '__main__':
-    player1 = PlayerAgent('nn').createPlayer()
-    player2 = PlayerAgent('nn').createPlayer()
-    
-    nnTrainning = False

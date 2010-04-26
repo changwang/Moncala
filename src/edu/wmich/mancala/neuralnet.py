@@ -118,26 +118,24 @@ class NeuralNet(object):
         
 if __name__ == "__main__":
     net = NeuralNet(3, 5)
-    net.loadFromFile('weights.txt')
     net.printNetwork()
-#    net.printNetwork()
-#    data = [[1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]]
-#    classes = [0, 1, 1, 1]
-#    
-#    allCorrect = False
-#    epsilon = 0.1
-#    counter = 0
-#    while not allCorrect:
-##        if counter % 1000000 == 0:
-#        allCorrect = True
-#        for i in range(len(data)):
-#            output = net.calculate(data[i])
-#            if output - classes[i] > epsilon and classes[i] - output > epsilon:
-#                allCorrect = False
-#            
-#            net.learnFromExample(data[i], classes[i])
-#            counter += 1
-#            
-#    net.printNetwork()
-#    net.saveToFile('weights.txt')
-#    
+    data = [[1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]]
+    classes = [0, 1, 1, 1]
+    
+    allCorrect = False
+    epsilon = 0.1
+    counter = 0
+    while not allCorrect:
+#        if counter % 1000000 == 0:
+        allCorrect = True
+        for i in range(len(data)):
+            output = net.calculate(data[i])
+            if output - classes[i] > epsilon and classes[i] - output > epsilon:
+                allCorrect = False
+            
+            net.learnFromExample(data[i], classes[i])
+            counter += 1
+            
+    net.printNetwork()
+    net.saveToFile('weights.txt')
+    
